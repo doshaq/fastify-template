@@ -3,45 +3,53 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import {
   CreateOrderInput,
   GetOrderParamsInput,
+  GetOrderQueryInput,
 } from "src/schema/order.schema";
 
 export const createOrderHandler = async (
   request: FastifyRequest<{ Body: CreateOrderInput; }>,
   reply: FastifyReply
 ) => {
-  // Generate attributes.
-  const id = uuidv4();
-  const createdAt = new Date();
-  const updatedAt = new Date();
-  // TODO: Register to repository.
-  const order = await request.server.db?.order.create({
+  const [error, order] = await request.server.to(request.server.db.order.create({
     data: {
-      total: 100
+      total: request.body.total
     }
-  });
-  reply.code(201).send({
-    id: 'xcz',
-    createdAt,
-    updatedAt,
-    total: order?.total,
-  });
+  }));
+  if (!!order)
+    reply.send(order);
+  else
+    reply.internalServerError();
 };
 
 export const getOrderHandler = async (
   request: FastifyRequest<{ Params: GetOrderParamsInput; }>,
   reply: FastifyReply
 ) => {
-  const id = request.params.id;
-  // TODO: Fetch from repository.
-  // const order = await request.prisma.order.findFirst({
-  //   where: {
-  //   id:1
-  //   }
-  // })
-  reply.code(200).send({
-    id,
-    total: 1000,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
+  const { id } = request.params;
+  const [error, order] = await request.server.to(request.server.db.order.findFirst({
+    where: {
+      id: id,
+    }
+  }));
+  console.log('odd', error);
+  if (!!order)
+    reply.send(order);
+  else
+    reply.notFound();
+};
+export const getOrdersHandler = async (
+  request: FastifyRequest<{ Querystring: GetOrderQueryInput; }>,
+  reply: FastifyReply
+) => {
+  const { createdAt } = request.query;
+  const [error, order] = await request.server.to(request.server.db.order.findMany({
+    where: {
+      createdAt: createdAt
+    }
+  }));
+  console.log('odd', error);
+  if (!!order)
+    reply.send(order);
+  else
+    reply.notFound();
 };

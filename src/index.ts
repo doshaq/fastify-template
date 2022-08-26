@@ -1,6 +1,6 @@
 import fs from "fs";
 import loadConfig from './config';
-import swaggerConfig from './services/swagger';
+import swaggerConfig from './config/swagger';
 import logger from './services/logger';
 import createPrisma from './services/db';
 import createServer from './services/server';
@@ -25,9 +25,9 @@ const startServer = async () => {
     server.register(helmet);
     server.register(registerRoutes, { prefix: '/api' });
 
-    server.setErrorHandler((error) => {
-      server.log.error(error);
-    });
+    // server.setErrorHandler((error) => {
+    //   server.log.error(error);
+    // });
     if (process.env.NODE_ENV === 'production') {
       for (const signal of ['SIGINT', 'SIGTERM']) {
         process.on(signal, () =>

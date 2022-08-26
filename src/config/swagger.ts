@@ -6,7 +6,7 @@ const swaggerConfig = withRefResolver({
   staticCSP: true,
   openapi: {
     info: {
-      title: "Jahez operation panel API.",
+      title: "Template fastify API.",
       description:
         "zod typescript fastify",
       version: "1.0.0",

@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Jahez operation panel API.
+  title: Template fastify API.
   description: zod typescript fastify
   version: 1.0.0
 components:
@@ -11,32 +11,24 @@ components:
         createOrderBodySchema:
           type: object
           properties:
-            id:
-              type: string
-              minLength: 3
-              maxLength: 50
-              description: created order id
             total:
               type: number
               maximum: 900000
               default: 100
               description: total bill of order
-          required:
-            - id
           additionalProperties: false
           example:
-            id: c165ad23-2ac3-4d80-80d7-d7b6c3e526bd
             total: 10000
         orderResponseSchema:
           type: object
           properties:
+            total:
+              $ref: >-
+                #/components/schemas/orderSchemas/properties/createOrderBodySchema/properties/total
             id:
               type: string
               format: uuid
               description: order id
-            total:
-              $ref: >-
-                #/components/schemas/orderSchemas/properties/createOrderBodySchema/properties/total
             createdAt:
               type: string
               format: date-time
@@ -54,8 +46,8 @@ components:
           example:
             total: 10000
             id: c165ad23-2ac3-4d80-80d7-d7b6c3e526bd
-            createdAt: 2022-08-26T22:21:54.731Z
-            updatedAt: 2022-08-26T22:21:54.731Z
+            createdAt: 2022-08-26T23:25:39.082Z
+            updatedAt: 2022-08-26T23:25:39.082Z
         getOrderParamsSchema:
           type: object
           properties:
@@ -70,12 +62,16 @@ components:
         getOrderQuerySchema:
           type: object
           properties:
-            id:
-              $ref: >-
-                #/components/schemas/orderSchemas/properties/createOrderBodySchema/properties/id
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
           additionalProperties: false
           example:
-            id: c165ad23-2ac3-4d80-80d7-d7b6c3e526bd
+            createdAt: 2022-08-26T23:25:39.082Z
+            updatedAt: 2022-08-26T23:25:39.082Z
       required:
         - createOrderBodySchema
         - orderResponseSchema
@@ -99,7 +95,7 @@ paths:
               $ref: >-
                 #/components/schemas/orderSchemas/properties/createOrderBodySchema
       responses:
-        '201':
+        '200':
           description: order successfuly added
           content:
             application/json:
@@ -107,16 +103,47 @@ paths:
                 $ref: >-
                   #/components/schemas/orderSchemas/properties/orderResponseSchema
                 description: order successfuly added
+    get:
+      tags:
+        - Order
+      parameters:
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: createdAt
+          required: false
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: updatedAt
+          required: false
+      responses:
+        '200':
+          description: Order queried successfully
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/orderSchemas/properties/orderResponseSchema
+                description: Order queried successfully
   /api/order/{id}:
     get:
       tags:
         - Order
       parameters:
         - schema:
-            $ref: >-
-              #/components/schemas/orderSchemas/properties/createOrderBodySchema/properties/id
+            type: string
+            format: date-time
           in: query
-          name: id
+          name: createdAt
+          required: false
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: updatedAt
           required: false
         - schema:
             $ref: >-

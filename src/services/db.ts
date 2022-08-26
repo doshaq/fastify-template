@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const createPrsima = () =>
   new PrismaClient({
-    log: ["error", 'warn', 'info', 'query'],
+    log: [],
   });
 
 export default createPrsima;

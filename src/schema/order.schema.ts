@@ -3,7 +3,6 @@ import { buildJsonSchemas } from "fastify-zod";
 import { bindExamples } from "src/helpers/open-api";
 import { FastifyInstance } from "fastify/types/instance";
 const orderInput = {
-  id: z.string().min(3).max(50).describe("created order id"),
   total: z.number().max(900000).default(100).describe("total bill of order"),
 };
 
@@ -29,7 +28,8 @@ const getOrderParamsSchema = z.object({
   id: orderGenerated.id,
 });
 const getOrderQuerySchema = z.object({
-  id: z.optional(orderInput.id),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Generate types from zod schemas.
@@ -46,7 +46,6 @@ const exampleOrder: OrderOutput = {
   updatedAt: new Date()
 };
 const createOrderBodySchemaExample: CreateOrderInput = {
-  id: exampleOrder.id,
   total: exampleOrder.total
 };
 const orderResponseSchemaExample: OrderOutput = { ...exampleOrder };
@@ -54,7 +53,8 @@ const getOrderParamsSchemaExample: GetOrderParamsInput = {
   id: exampleOrder.id,
 };
 const getOrderQuerySchemaExample: GetOrderQueryInput = {
-  id: exampleOrder.id,
+  createdAt: exampleOrder.createdAt,
+  updatedAt: exampleOrder.updatedAt,
 };
 const schemaExamples = {
   createOrderBodySchemaExample: createOrderBodySchemaExample,
@@ -77,9 +77,9 @@ const { schemas: orderSchemas, $ref } = buildJsonSchemas(
 );
 export const getRef = (server: FastifyInstance) => {
   for (const schema of orderSchemas) {
-      if(!server.getSchema(schema.$id))
-        server.addSchema(schema);
+    if (!server.getSchema(schema.$id))
+      server.addSchema(schema);
   }
   return $ref;
-}
+};
 bindExamples(orderSchemas, schemaExamples);

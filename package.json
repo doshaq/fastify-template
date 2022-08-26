@@ -1,5 +1,5 @@
 {
-  "name": "jahez-operation-api",
+  "name": "template-rest-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,11 +8,10 @@
     "start": "node build/index.js | pino-pretty --colorize",
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts | pino-pretty --colorize",
     "postinstall": "npx typesync && npx prisma generate && husky install",
-    "prisma": "dotenv -e .env prisma",
-    "db:gen": "pnpm run prisma generate",
-    "db:studio": "pnpm run prisma studio",
-    "db:migrate": "pnpm run prisma migrate dev",
-    "db:push": "pnpm run prisma db push",
+    "db:gen": "npx prisma generate",
+    "db:studio": "npx prisma studio",
+    "db:migrate": "npx prisma migrate dev",
+    "db:push": "npx prisma db push",
     "lint": "./node_modules/.bin/eslint"
   },
   "dependencies": {
@@ -105,7 +104,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "npm run build"
+      "pre-push": "npm install && npm run build"
     }
   }
 }

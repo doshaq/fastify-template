@@ -8,13 +8,25 @@ const orderRoutes = async (server: FastifyInstance) => {
     schema: {
       body: $ref("createOrderBodySchema"),
       response: {
-        201: { ...$ref("orderResponseSchema"), description: "order successfuly added" },
+        200: { ...$ref("orderResponseSchema"), description: "order successfuly added" },
       },
       tags: ["Order"],
     },
     handler: createOrderHandler,
   });
-
+  server.get("/", {
+    schema: {
+      querystring: $ref("getOrderQuerySchema"),
+      response: {
+        200: {
+          ...$ref("orderResponseSchema"),
+          description: "Order queried successfully",
+        },
+      },
+      tags: ["Order"],
+    },
+    handler: getOrderHandler,
+  });
   server.get("/:id", {
     schema: {
       params: $ref("getOrderParamsSchema"),

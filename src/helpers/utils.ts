@@ -16,7 +16,7 @@ export const healthCheck = (server: FastifyInstance): Promise<boolean> => {
         resolve(true);
       })
       .catch((e) => {
-        logger.fatal(`prisma error ${e}`);
+        logger.fatal('database conenction failed');
         reject(false);
       });
   });
