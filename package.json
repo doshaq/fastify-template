@@ -1,0 +1,111 @@
+{
+  "name": "jahez-operation-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node build/index.js | pino-pretty --colorize",
+    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts | pino-pretty --colorize",
+    "postinstall": "npx typesync && npx prisma generate && husky install",
+    "prisma": "dotenv -e .env prisma",
+    "db:gen": "pnpm run prisma generate",
+    "db:studio": "pnpm run prisma studio",
+    "db:migrate": "pnpm run prisma migrate dev",
+    "db:push": "pnpm run prisma db push",
+    "lint": "./node_modules/.bin/eslint"
+  },
+  "dependencies": {
+    "@fastify/auth": "^3.0.2",
+    "@fastify/cors": "^8.1.0",
+    "@fastify/formbody": "^7.0.1",
+    "@fastify/helmet": "^9.0.1",
+    "@fastify/jwt": "^6.3.2",
+    "@fastify/multipart": "^7.1.0",
+    "@fastify/sensible": "^5.1.1",
+    "@fastify/swagger": "^7.4.1",
+    "@prisma/client": "^4.2.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.1",
+    "dotenv-cli": "^6.0.0",
+    "env-schema": "^5.0.0",
+    "fastify": "^4.5.2",
+    "fastify-autoload": "^3.13.0",
+    "fastify-cli": "^5.3.0",
+    "fastify-file-upload": "^4.0.0",
+    "fastify-now": "^3.0.0",
+    "fastify-plugin": "^4.2.0",
+    "fastify-zod": "^1.1.0",
+    "fluent-json-schema": "^3.1.0",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "pino": "^8.4.2",
+    "uuid": "^8.3.2",
+    "zod": "^3.18.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/eslint": "8.4.1",
+    "@types/eslint-plugin-prettier": "3.1.0",
+    "@types/http-errors": "1.8.2",
+    "@types/jest": "27.4.1",
+    "@types/jsonwebtoken": "8.5.8",
+    "@types/node": "17.0.25",
+    "@types/nodemon": "1.19.1",
+    "@types/pino": "7.0.4",
+    "@types/prettier": "2.6.0",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "5.20.0",
+    "@typescript-eslint/parser": "5.20.0",
+    "cross-env": "7.0.3",
+    "eslint": "8.13.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "husky": "7.0.4",
+    "jest": "27.5.1",
+    "lint-staged": "12.3.8",
+    "nodemon": "2.0.15",
+    "nyc": "15.1.0",
+    "pino-pretty": "7.6.1",
+    "prettier": "2.6.2",
+    "prisma": "4.2.1",
+    "tap": "16.0.1",
+    "ts-node": "10.7.0",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "4.6.3"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "trailingComma": "all"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module"
+    },
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "prettier",
+      "prettier/@typescript-eslint"
+    ],
+    "env": {
+      "node": true
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run build"
+    }
+  }
+}

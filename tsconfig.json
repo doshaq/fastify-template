@@ -1,0 +1,36 @@
+{
+    "ts-node": {
+        "files": true
+    },
+    "files": [
+        "src/index.ts",
+        "src/types/index.d.ts"
+    ],
+    "compilerOptions": {
+        "lib": [
+            "es2020"
+        ],
+        "module": "commonjs",
+        "target": "es2020",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "incremental": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "build",
+        "baseUrl": ".",
+        "paths": {
+            "config/*": [
+                "config/*"
+            ],
+        }
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

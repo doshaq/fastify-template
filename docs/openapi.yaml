@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: Jahez operation panel API.
+  description: zod typescript fastify
+  version: 1.0.0
+components:
+  schemas:
+    orderSchemas:
+      type: object
+      properties:
+        createOrderBodySchema:
+          type: object
+          properties:
+            id:
+              type: string
+              minLength: 3
+              maxLength: 50
+              description: created order id
+            total:
+              type: number
+              maximum: 900000
+              default: 100
+              description: total bill of order
+          required:
+            - id
+          additionalProperties: false
+          example:
+            id: c165ad23-2ac3-4d80-80d7-d7b6c3e526bd
+            total: 10000
+        orderResponseSchema:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: order id
+            total:
+              $ref: >-
+                #/components/schemas/orderSchemas/properties/createOrderBodySchema/properties/total
+            createdAt:
+              type: string
+              format: date-time
+              description: when order was created
+            updatedAt:
+              type: string
+              format: date-time
+              description: when order was last updated
+          required:
+            - id
+            - createdAt
+            - updatedAt
+          additionalProperties: false
+          description: Order response schema
+          example:
+            total: 10000
+            id: c165ad23-2ac3-4d80-80d7-d7b6c3e526bd
+            createdAt: 2022-08-26T22:21:54.731Z
+            updatedAt: 2022-08-26T22:21:54.731Z
+        getOrderParamsSchema:
+          type: object
+          properties:
+            id:
+              $ref: >-
+                #/components/schemas/orderSchemas/properties/orderResponseSchema/properties/id
+          required:
+            - id
+          additionalProperties: false
+          example:
+            id: c165ad23-2ac3-4d80-80d7-d7b6c3e526bd
+        getOrderQuerySchema:
+          type: object
+          properties:
+            id:
+              $ref: >-
+                #/components/schemas/orderSchemas/properties/createOrderBodySchema/properties/id
+          additionalProperties: false
+          example:
+            id: c165ad23-2ac3-4d80-80d7-d7b6c3e526bd
+      required:
+        - createOrderBodySchema
+        - orderResponseSchema
+        - getOrderParamsSchema
+        - getOrderQuerySchema
+      additionalProperties: false
+paths:
+  /api/health:
+    get:
+      responses:
+        '200':
+          description: Default Response
+  /api/order/:
+    post:
+      tags:
+        - Order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/orderSchemas/properties/createOrderBodySchema
+      responses:
+        '201':
+          description: order successfuly added
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/orderSchemas/properties/orderResponseSchema
+                description: order successfuly added
+  /api/order/{id}:
+    get:
+      tags:
+        - Order
+      parameters:
+        - schema:
+            $ref: >-
+              #/components/schemas/orderSchemas/properties/createOrderBodySchema/properties/id
+          in: query
+          name: id
+          required: false
+        - schema:
+            $ref: >-
+              #/components/schemas/orderSchemas/properties/orderResponseSchema/properties/id
+          in: path
+          name: id
+          required: true
+      responses:
+        '200':
+          description: Order queried successfully
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/orderSchemas/properties/orderResponseSchema
+                description: Order queried successfully
